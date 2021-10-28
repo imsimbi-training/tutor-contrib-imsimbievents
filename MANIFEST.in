@@ -1,0 +1,2 @@
+recursive-include tutormongoeventtracker/patches *
+recursive-include tutormongoeventtracker/templates *
