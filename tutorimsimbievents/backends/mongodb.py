@@ -54,6 +54,14 @@ class MongoBackend:
         # Make timezone aware by default
         extra['tz_aware'] = extra.get('tz_aware', True)
 
+        # If the MongoDB server uses a separate authentication database that should be specified here
+        auth_source = extra.get('authsource', '') or None
+
+        # sanitize a kwarg which may be present and is no longer expected
+        # AED 2020-03-02 TODO: Remove this when 'auth_source' will no longer exist in kwargs
+        if 'auth_source' in kwargs:
+            extra.pop('auth_source')
+
         # Connect to database and get collection
 
         self.connection = MongoClient(
@@ -65,7 +73,7 @@ class MongoBackend:
         self.database = self.connection[db_name]
 
         if user or password:
-            self.database.authenticate(user, password)
+            self.database.authenticate(user, password, auth_source)
 
         self.collection = self.database[collection_name]
 
